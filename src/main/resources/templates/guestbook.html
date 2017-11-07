@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Guestbook</title>
+</head>
+<body>
+  <h1>GuestBook</h1>
+  <section>
+    <ul>
+      <li th:each = "entry: ${entries}">
+        <p th:text="${entry.userName}">
+          Szymon Wojtas
+        </p>
+        <p th:text="${entry.message}">
+          To jest mój testowy wpis na tę księgę gości. Dość dziwaczna sprawa Lorem Ipsum, bla bla bla.
+        <p/>
+        <p th:text="${entry.dateTime}">
+          21.02.2013
+        </p>
+      </li>
+    </ul>
+  </section>
+  <section>
+  <form method="post">
+      <fieldset>
+        <textarea type = "text" name="comment" cols="150" rows="8">Add your comment here</textarea>
+        <br>
+        <span>
+          email adress:
+        </span>
+        <br>
+        <input type="email" name="email-address" placeholder="example@address.com">
+        <input type = "submit" value="send">
+      </fieldset>
+  </form>
+  </section>
+</body>
+</html>
