@@ -10,19 +10,12 @@ public class GuestbookEntry {
     private String message;
     private String userName;
     private Date dateTime;
-    private List<GuestbookEntry> entries = new ArrayList<GuestbookEntry>();
 
-
-
-    public GuestbookEntry() {
-        entries.add(this);
-    }
 
     public GuestbookEntry(String message, String userName) {
         this.message = message;
         this.userName = userName;
         this.dateTime = Calendar.getInstance().getTime();
-        entries.add(this);
     }
 
     public String getMessage() {

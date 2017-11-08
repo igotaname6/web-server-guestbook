@@ -9,13 +9,13 @@
   <section>
     <ul>
       <li th:each = "entry: ${entries}">
+        <p th:text="${entry.message}">
+          To jest mój testowy wpis na tę księgę gości. Dość dziwaczna sprawa Lorem Ipsum, bla bla bla.
+        </p>
         <p th:text="${entry.userName}">
           Szymon Wojtas
         </p>
-        <p th:text="${entry.message}">
-          To jest mój testowy wpis na tę księgę gości. Dość dziwaczna sprawa Lorem Ipsum, bla bla bla.
-        <p/>
-        <p th:text="${entry.dateTime}">
+        <p th:text="${#dates.format(entry.dateTime, 'dd MMM yyyy - HH:mm')}">
           21.02.2013
         </p>
       </li>
@@ -24,7 +24,7 @@
   <section>
   <form method="post">
       <fieldset>
-        <textarea type = "text" name="comment" cols="150" rows="8">Add your comment here</textarea>
+        <textarea type = "text" name="comment" cols="150" rows="8" placeholder="Write message here"></textarea>
         <br>
         <span>
           email adress:

@@ -7,16 +7,61 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
+import java.net.URLDecoder;
 import java.util.*;
 
 public class GuestbookController implements HttpHandler {
-    public void handle(HttpExchange httpExchange) throws IOException {
 
+    private List<GuestbookEntry> entries;
+
+    public GuestbookController(){
+        super();
+        entries = new ArrayList<>();
     }
 
-    private String createHtml(List<GuestbookEntry> entries) {
+
+    public void handle(HttpExchange httpExchange) throws IOException {
+
+        String response = "";
+        String method = httpExchange.getRequestMethod();
+
+        if(method.equals("GET")){
+            response = createHtml();
+        }
+
+        if(method.equals("POST")) {
+            InputStreamReader ipsr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+            BufferedReader br = new BufferedReader(ipsr);
+            String formData = br.readLine();
+
+            System.out.println(formData);
+
+            createEntryFromForm(formData);
+            response = createHtml();
+        }
+
+        httpExchange.sendResponseHeaders(200, response.getBytes().length);
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
+    private void createEntryFromForm(String formData) throws UnsupportedEncodingException{
+        List<String> valuesList = new ArrayList<>();
+
+        String[] pairs = formData.split("&");
+        for(String pair : pairs){
+            String[] keyValue = pair.split("=");
+
+            String value = new URLDecoder().decode(keyValue[1], "UTF-8");
+
+            valuesList.add(value);
+        }
+        entries.add(new GuestbookEntry(valuesList.get(0), valuesList.get(1)));
+    }
+
+    private String createHtml() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("/templates/");
         templateResolver.setSuffix(".html");
@@ -27,10 +72,9 @@ public class GuestbookController implements HttpHandler {
 
         StringWriter writer = new StringWriter();
         Context context = new Context();
-        context.setVariable("entries", entries);
+        context.setVariable("entries", this.entries);
 
         templateEngine.process("guestbook", context, writer);
-
         return writer.toString();
     }
 }

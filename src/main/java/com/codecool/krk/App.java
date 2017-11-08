@@ -6,10 +6,7 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-/**
- * Hello world!
- *
- */
+
 public class App 
 {
     public static void main( String[] args )
@@ -17,6 +14,10 @@ public class App
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
             server.createContext("/guestbook", new GuestbookController());
+
+            server.setExecutor(null); // creates a default executor
+            // start listening
+            server.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
